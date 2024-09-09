@@ -129,7 +129,37 @@ This insert statement could have been added to `init.sql` but here we demonstrat
 psql -h localhost -p 5432 -U postgres -d mydatabase -f insert.sql
 ```
 
+## Destination PostgreSQL Connection string environment variable
 
+
+Adjust to your PostgreSQL installation or will be as follows with Dev Container PostgreSQL defined in `docker-compose.yml`
+```sh
+export PG_CONNECTION_STRING_2="postgres://postgres:postgres@localhost:5432/mydatabase"
+```
+
+## Coder's PostgreSQL database
+
+Coder is a Cloud Development Environment "CDE" self-hosted OSS platform. It has a PostgreSQL embedded database which is a CloudQuery source in the `sync.py` and `coder-postgres.yml` example.
+
+### Install
+
+```sh
+curl -L https://coder.com/install.sh | sh
+```
+
+### Get PostgreSQL connection string
+
+```sh
+server postgres-builtin-url
+```
+
+### Coder Connection string environment variable
+
+
+Actual port and password will vary by Coder installation
+```sh
+export PG_CONNECTION_STRING_1="postgres://coder@localhost:<assigned port - not 5432>/coder?sslmode=disable&password=<assigned password>"
+```
 
 ## Resources
 
@@ -154,6 +184,8 @@ psql -h localhost -p 5432 -U postgres -d mydatabase -f insert.sql
 [Salesforce objects](https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_list.htm)
 
 [Basic transformer](https://hub.cloudquery.io/plugins/transformer/cloudquery/basic/latest/docs)
+
+[Coder OSS](https://github.com/coder/coder)
 
 ## License
 

@@ -3,6 +3,10 @@ import psycopg2
 import json
 import os
 
+def remove_plugins_directory():
+    command = "rm -rf .cq/plugins"
+    subprocess.run(command, shell=True)
+
 def connect_to_db(conn_string, table_name):
     conn_string = os.environ.get(conn_string)
     if not conn_string:
@@ -23,6 +27,10 @@ def call_cloudquery(command):
     return result.stdout, result.stderr
 
 def sync_coder_postgres():
+
+    # Remove plugins directory
+    remove_plugins_directory()
+
     # Call the CloudQuery CLI to sync the databases
     command = "cloudquery sync coder-postgres.yml"
     stdout, stderr = call_cloudquery(command)
@@ -46,6 +54,10 @@ def sync_coder_postgres():
     conn.close()
 
 def sync_salesforce_postgres():
+
+    # Remove plugins directory
+    remove_plugins_directory()
+
     # Call the CloudQuery CLI to sync the databases
     command = "cloudquery sync sfdc-postgres.yml"
     stdout, stderr = call_cloudquery(command)
@@ -139,7 +151,7 @@ def main():
 
             action = input("""Enter:
             '1' to sync Coder PostgreSQL with another PostgreSQL database,
-            '2' to sync Salesforce with PostgreSQL,
+            '2' to sync Salesforce with PostgreSQL
             'q' to exit:
             
             """)
