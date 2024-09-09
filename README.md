@@ -75,6 +75,16 @@ Put the tablename that you want to sync in the source. And create environment va
 
 Put the objects you want to sync in the source spec. Maybe I'm doing something wrong, but all it syncs is the Salesforce Id, for the Account object, and no other columns.
 
+## Python app
+
+`sync.py` is a simple CLI app to run the `cloudquery` command line for postgres-to-postgres and salesforce-to-postgres CloudQuery configurations in `.yml` files.
+
+> The following Python package is required to retrieve values from the PostgreSQL databases. This is to prove data was synced with PostgreSQL.
+
+```sh
+pip install psycopg2-binary
+```
+
 ## Resources
 
 [CloudQuery SaaS dashboard](https://cloud.cloudquery.io/)
@@ -93,7 +103,11 @@ Put the objects you want to sync in the source spec. Maybe I'm doing something w
 )
 [PostgreSQL destination plugin](https://hub.cloudquery.io/plugins/destination/cloudquery/postgresql/latest/docs)
 
-[Ssalesforce source plugin](https://hub.cloudquery.io/plugins/source/cloudquery/salesforce/latest/docs)
+[Salesforce source plugin](https://hub.cloudquery.io/plugins/source/cloudquery/salesforce/latest/docs)
+
+[Salesforce objects](https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_list.htm)
+
+[Basic transformer](https://hub.cloudquery.io/plugins/transformer/cloudquery/basic/latest/docs)
 
 ## License
 
