@@ -35,7 +35,10 @@ def sync_coder_postgres():
     command = "cloudquery sync coder-postgres.yml"
     stdout, stderr = call_cloudquery(command)
     print("Output:", stdout)
-    print("Error:", stderr)
+    if stderr:
+        print("Error:", stderr)
+    else:
+        print("No errors")
 
     # Check if there were any errors
     if stderr:
@@ -70,7 +73,10 @@ def sync_postgres_postgres():
     command = "cloudquery sync postgres-postgres.yml"
     stdout, stderr = call_cloudquery(command)
     print("Output:", stdout)
-    print("Error:", stderr)
+    if stderr:
+        print("Error:", stderr)
+    else:
+        print("No errors")
 
     # Check if there were any errors
     if stderr:
@@ -105,7 +111,10 @@ def sync_salesforce_postgres():
     command = "cloudquery sync sfdc-postgres.yml"
     stdout, stderr = call_cloudquery(command)
     print("Output:", stdout)
-    print("Error:", stderr)
+    if stderr:
+        print("Error:", stderr)
+    else:
+        print("No errors")
 
     # Check if there were any errors
     if stderr:
@@ -120,10 +129,10 @@ def sync_salesforce_postgres():
     all_rows = cursor.fetchall()
 
     # Print the Ids (testing)
-    for row in all_rows:
-        json_data = row[0]
-        id = extract_data_from_json(json_data)
-        print(f"Id: {id}")
+    #for row in all_rows:
+    #    json_data = row[0]
+    #    id = extract_data_from_json(json_data)
+    #    print(f"Id: {id}")
 
     # creating tables for each object type
     object_types = set(row[1] for row in all_rows)
@@ -175,6 +184,9 @@ def sync_salesforce_postgres():
         # Execute the query
         cursor.executemany(insert_sql, rows_to_insert)
         conn.commit()
+
+        # Print the count of rows
+        print(f"\n{len(rows_to_insert)} rows inserted into the '{table_name}' table.")
 
     # Close the database connection
     cursor.close()
