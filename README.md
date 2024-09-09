@@ -89,6 +89,8 @@ pip install psycopg2-binary
 
 If you want to run everything in a Dev Container, this will spin up PostgreSQL and Python containers and the PostgreSQL database can be used in CloudQuery examples.
 
+> If you have also run the CloudQuery CLI on the host, before the Dev Container, delete the `.cq` plugins directory if the architecture of the Dev Container does not match the host. 
+
 ## psql client
 
 psql is added to the Python container or add to your local machine like mac to test connectivity
@@ -126,6 +128,7 @@ This insert statement could have been added to `init.sql` but here we demonstrat
 ```sh
 psql -h localhost -p 5432 -U postgres -d mydatabase -f insert.sql
 ```
+
 
 
 ## Resources

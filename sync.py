@@ -52,6 +52,11 @@ def sync_salesforce_postgres():
     print("Output:", stdout)
     print("Error:", stderr)
 
+    # Check if there were any errors
+    if stderr:
+        print("Error occurred while running CloudQuery CLI. Exiting.")
+        return
+
     # Connect to the PostgreSQL database
     conn, cursor = connect_to_db("PG_CONNECTION_STRING_2", "salesforce_objects")
 
