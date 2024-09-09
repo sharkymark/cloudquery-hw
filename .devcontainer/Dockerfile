@@ -13,5 +13,8 @@ RUN apt-get update && apt-get install -y procps ssh git net-tools htop curl post
 # Install pip dependencies
 RUN pip install --no-cache-dir --upgrade pip && pip install psycopg2-binary
 
-# Set the network mode to host
-#ARG NETWORK_MODE=host
+RUN ARCH=$(uname -m) && \
+    URL="https://github.com/cloudquery/cloudquery/releases/download/cli-v6.6.2/cloudquery_linux_${ARCH}" && \
+    curl -L "$URL" -o cloudquery && \
+    chmod a+x cloudquery && \
+    mv cloudquery /usr/local/bin/

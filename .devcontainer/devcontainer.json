@@ -1,12 +1,17 @@
 {
-    "name": "CloudQuery Python",
-    "build": {
-      "dockerfile": "../Dockerfile",
-      "context": ".."
-    },
+    "name": "CloudQuery Python & PostgreSQL",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+    "mounts": [
+    ], 
     "containerEnv": {
       "PG_CONNECTION_STRING_1": "${localEnv:PG_CONNECTION_STRING_1}",
-      "PG_CONNECTION_STRING_2": "${localEnv:PG_CONNECTION_STRING_2}"
+      "PG_CONNECTION_STRING_2": "${localEnv:PG_CONNECTION_STRING_2}",
+      "SALESFORCE_USERNAME": "${localEnv:SALESFORCE_USERNAME}",
+      "SALESFORCE_PASSWORD": "${localEnv:SALESFORCE_PASSWORD}",
+      "SALESFORCE_CONSUMER_KEY_1": "${localEnv:SALESFORCE_CONSUMER_KEY_1}",
+      "SALESFORCE_CONSUMER_SECRET_1": "${localEnv:SALESFORCE_CONSUMER_SECRET_1}"
     },
     "customizations": {
       "vscode": {
