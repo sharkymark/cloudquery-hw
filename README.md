@@ -1,6 +1,6 @@
 # CloudQuery Hello, World!
 
-CloudQuery is data movement ELT software. You download a CLI, create source and destination configurations (e.g., Postgres to Postgres or Salesforce to Postgres)
+CloudQuery is data movement ELT software. You download a CLI, create source and destination configurations (e.g., PostgreSQL to PostgresSQL or Salesforce to PostgreSQL)
 
 ## Commands
 
@@ -31,7 +31,7 @@ spec:
   destinations: ["postgresql"]
   # Learn more about the configuration options at https://cql.ink/postgresql_source
   spec:
-    connection_string: "${PG_CONNECTION_STRING_1" # set the environment variable in a format like postgres://postgres:pass@localhost:5432/postgres?sslmode=disable
+    connection_string: "${PG_CONNECTION_STRING_1}" # set the environment variable in a format like postgres://postgres:pass@localhost:5432/postgres?sslmode=disable
     # Optional parameters:
     # cdc_id: "postgresql" # Set to a unique string per source to enable Change Data Capture mode (logical replication, or CDC)
     # pgx_log_level: error
@@ -46,7 +46,7 @@ spec:
   write_mode: "overwrite-delete-stale"
   # Learn more about the configuration options at https://cql.ink/postgresql_destination
   spec:
-    connection_string: "${PG_CONNECTION_STRING_2" # set the environment variable in a format like postgres://postgres:pass@localhost:5432/postgres?sslmode=disable
+    connection_string: "${PG_CONNECTION_STRING_2}" # set the environment variable in a format like postgres://postgres:pass@localhost:5432/postgres?sslmode=disable
     # you can also specify it in DSN format, which can hold special characters in the password field:
     # connection_string: "user=postgres password=pass+0-[word host=localhost port=5432 dbname=postgres"
     # Optional parameters:
@@ -67,9 +67,9 @@ cloudquery sync postgres-postgres.yml
 
 ## Plugins
 
-### Postgres
+### PostgreSQL
 
-Put the tablename that you want to sync in the source. And create environment variables for the Postgres connection strings.
+Put the tablename that you want to sync in the source. And create environment variables for the PostgreSQL connection strings.
 
 ### Salesforce
 
