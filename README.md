@@ -85,6 +85,49 @@ Put the objects you want to sync in the source spec. Maybe I'm doing something w
 pip install psycopg2-binary
 ```
 
+## Dev Container 
+
+If you want to run everything in a Dev Container, this will spin up PostgreSQL and Python containers and the PostgreSQL database can be used in CloudQuery examples.
+
+## psql client
+
+psql is added to the Python container or add to your local machine like mac to test connectivity
+
+### local machine 
+
+```sh
+brew install libpq
+```
+
+if `psql` is not found, run
+
+```sh
+brew link --force libpq
+```
+
+### connect
+
+```sh
+psql -h localhost -p 5432 -U postgres -d postgres
+```
+
+### commands
+
+* list users `\du`
+* list database `\l`
+* contact to a database `\c <database>`
+* list tables `\dt`
+* list schemas `\d <table name>`
+
+### add data
+
+This insert statement could have been added to `init.sql` but here we demonstrate how to run with `psql` from the project directory in the Python container
+
+```sh
+psql -h localhost -p 5432 -U postgres -d mydatabase -f insert.sql
+```
+
+
 ## Resources
 
 [CloudQuery SaaS dashboard](https://cloud.cloudquery.io/)

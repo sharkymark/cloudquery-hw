@@ -14,13 +14,8 @@ def connect_to_db(conn_string, table_name):
 
 def extract_data_from_json(json_data):
     # Parse the JSON data and extract values
-    data = json_data
-    id = data.get('Id')
-    name = data.get('Name')
-    #description = data.get('Description')
-    website = data.get('Website')
-    industry = data.get('Industry')
-    return id, name, website, industry
+    id = json_data.get('Id')
+    return id
 
 def call_cloudquery(command):
     """Calls the CloudQuery CLI with the specified command."""
@@ -60,22 +55,71 @@ def sync_salesforce_postgres():
     # Connect to the PostgreSQL database
     conn, cursor = connect_to_db("PG_CONNECTION_STRING_2", "salesforce_objects")
 
-    # Query the database for the synced data
-    cursor.execute("SELECT _cq_raw FROM salesforce_objects")
-    rows = cursor.fetchall()
+    # Fetch all data
+    cursor.execute("SELECT _cq_raw, object_type FROM salesforce_objects ORDER BY object_type")
+    all_rows = cursor.fetchall()
 
-    # Process the data
-    for row in rows:
+    # Print the Ids (testing)
+    for row in all_rows:
         json_data = row[0]
-        id, name, website, industry = extract_data_from_json(json_data)
+        id = extract_data_from_json(json_data)
         print(f"Id: {id}")
-        print(f"Name: {name}")
-        print(f"Website: {website}")
-        print(f"Industry: {industry}")
+
+    # creating tables for each object type
+    object_types = set(row[1] for row in all_rows)
+
+    for object_type in object_types:
+        table_name = object_type.lower() + 's'  # Convert to lowercase and add 's'
+
+        # Drop existing table if it exists
+        cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
+
+        # Get JSON data for this object_type
+        object_type_rows = [row for row in all_rows if row[1] == object_type]
+
+        # Parse JSON data to extract column names and data types
+        columns = []
+        data_type_map = {
+            'int': 'integer',
+            'str': 'text',
+            'float': 'real',
+            'bool': 'boolean',
+            'list': 'text',  # Assuming lists will be stored as JSON strings
+            'dict': 'text'  # Assuming dicts will be stored as JSON strings
+        }
+
+        # Use the first row to determine the columns
+        if object_type_rows:
+            json_data = object_type_rows[0][0]
+            for key, value in json_data.items():
+                data_type = data_type_map.get(type(value).__name__, 'text')  # Default to 'text' if unknown
+                columns.append((key, data_type))
+
+        # Create new table with extracted columns
+        create_table_sql = f"CREATE TABLE {table_name} ("
+        for i, column in enumerate(columns):
+            create_table_sql += f"{column[0]} {column[1]}"
+            if column[0] == 'Id':
+                create_table_sql += " PRIMARY KEY"
+            if i < len(columns) - 1:
+                create_table_sql += ", "
+        create_table_sql += ")"
+        cursor.execute(create_table_sql)
+
+        # Insert data into new table
+        insert_sql = f"INSERT INTO {table_name} ({', '.join([column[0] for column in columns])}) VALUES ({', '.join(['%s'] * len(columns))})"
+
+        # Process rows to extract JSON data and convert to tuples
+        rows_to_insert = [tuple(row[0].values()) for row in object_type_rows]
+
+        # Execute the query
+        cursor.executemany(insert_sql, rows_to_insert)
+        conn.commit()
 
     # Close the database connection
     cursor.close()
     conn.close()
+
 
 def main():
 

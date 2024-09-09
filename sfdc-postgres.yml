@@ -12,7 +12,7 @@ spec:
     client_secret: "${SALESFORCE_CONSUMER_SECRET_1}"
     username: "${SALESFORCE_USERNAME_1}"
     password: "${SALESFORCE_PASSWORD_1}"
-    include_objects: ["Contact"]
+    include_objects: ["Account", "Contact","Opportunity"]
 ---
 
 kind: destination
