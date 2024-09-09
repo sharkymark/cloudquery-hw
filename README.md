@@ -160,7 +160,7 @@ curl -L https://coder.com/install.sh | sh
 ### Get PostgreSQL connection string
 
 ```sh
-server postgres-builtin-url
+coder server postgres-builtin-url
 ```
 
 ### Coder Connection string environment variable
