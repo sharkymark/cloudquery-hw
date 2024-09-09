@@ -77,9 +77,18 @@ Put the objects you want to sync in the source spec. Maybe I'm doing something w
 
 ## Python app
 
-`sync.py` is a simple CLI app to run the `cloudquery` command line for postgres-to-postgres and salesforce-to-postgres CloudQuery configurations in `.yml` files.
+`sync.py` is a simple CLI app to run the `cloudquery` command line for:
+1. PostgreSQL-to-PostgreSQL table sync
+1. A Coder cloud dev environment PostgreSQL to PostgreSQL workspaces table sync
+1. A Salesforce-to-PostgreSQL sync
 
-> The following Python package is required to retrieve values from the PostgreSQL databases. This is to prove data was synced with PostgreSQL.
+The app uses 3 CloudQuery configurations in `.yml` files.
+
+The app assumes environment variables are set for Salesforce and two PostgreSQL database authentication credentials.
+
+The app has logic to create new PostgreSQL tables (e.g., acccounts, contacts) for Salesforce objects discovered in the synced `salesforce_objects` table created by the CloudQuery `sfdc-postgres.yml` example.
+
+> The following Python package is required to retrieve values from the PostgreSQL databases. This is to prove data was synced with PostgreSQL. It is automatically installed in using the Dev Container.
 
 ```sh
 pip install psycopg2-binary
@@ -135,6 +144,7 @@ psql -h localhost -p 5432 -U postgres -d mydatabase -f insert.sql
 Adjust to your PostgreSQL installation or will be as follows with Dev Container PostgreSQL defined in `docker-compose.yml`
 ```sh
 export PG_CONNECTION_STRING_2="postgres://postgres:postgres@localhost:5432/mydatabase"
+export PG_CONNECTION_STRING_3="postgres://postgres:postgres@localhost:5432/mydestinationdatabase"
 ```
 
 ## Coder's PostgreSQL database

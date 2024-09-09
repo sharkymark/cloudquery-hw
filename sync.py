@@ -7,7 +7,7 @@ def remove_plugins_directory():
     command = "rm -rf .cq/plugins"
     subprocess.run(command, shell=True)
 
-def connect_to_db(conn_string, table_name):
+def connect_to_db(conn_string):
     conn_string = os.environ.get(conn_string)
     if not conn_string:
         raise ValueError(f"Connection string '{conn_string}' not set.")
@@ -37,17 +37,60 @@ def sync_coder_postgres():
     print("Output:", stdout)
     print("Error:", stderr)
 
+    # Check if there were any errors
+    if stderr:
+        print("Error occurred while running CloudQuery CLI. Exiting.")
+        return
+
     # Connect to the PostgreSQL database
-    conn, cursor = connect_to_db("PG_CONNECTION_STRING_2", "workspaces")
+    conn, cursor = connect_to_db("PG_CONNECTION_STRING_2")
 
     # Query the database for the synced data
     cursor.execute("SELECT * FROM workspaces")
     rows = cursor.fetchall()
 
     # Process the data
-    for row in rows:
-        for value in row:
-            print(value)
+    #for row in rows:
+    #    for value in row:
+    #        print(value)
+
+    # Print the count of rows
+    print(f"\n{len(rows)} rows inserted into the 'workspaces' PostgreSQL table.")
+
+    # Close the database connection
+    cursor.close()
+    conn.close()
+
+def sync_postgres_postgres():
+
+    # Remove plugins directory
+    remove_plugins_directory()
+
+    # Call the CloudQuery CLI to sync the databases
+    command = "cloudquery sync postgres-postgres.yml"
+    stdout, stderr = call_cloudquery(command)
+    print("Output:", stdout)
+    print("Error:", stderr)
+
+    # Check if there were any errors
+    if stderr:
+        print("Error occurred while running CloudQuery CLI. Exiting.")
+        return
+
+    # Connect to the PostgreSQL database
+    conn, cursor = connect_to_db("PG_CONNECTION_STRING_3")
+
+    # Query the database for the synced data
+    cursor.execute("SELECT * FROM mytable")
+    rows = cursor.fetchall()
+
+    # Process the data
+    #for row in rows:
+    #    for value in row:
+    #        print(value)
+
+    # Print the count of rows
+    print(f"\n{len(rows)} rows inserted into the 'mytable' PostgreSQL table in the `mydestinationdatabase` database.")
 
     # Close the database connection
     cursor.close()
@@ -70,7 +113,7 @@ def sync_salesforce_postgres():
         return
 
     # Connect to the PostgreSQL database
-    conn, cursor = connect_to_db("PG_CONNECTION_STRING_2", "salesforce_objects")
+    conn, cursor = connect_to_db("PG_CONNECTION_STRING_2")
 
     # Fetch all data
     cursor.execute("SELECT _cq_raw, object_type FROM salesforce_objects ORDER BY object_type")
@@ -150,14 +193,17 @@ def main():
             print("===========================================\n")
 
             action = input("""Enter:
-            '1' to sync Coder PostgreSQL with another PostgreSQL database,
-            '2' to sync Salesforce with PostgreSQL
+            '1' to sync a table between two PostgreSQL databases,
+            '2' to sync a workspaces table between a Coder PostgreSQL and another PostgreSQL database,
+            '3' to sync Salesforce with PostgreSQL
             'q' to exit:
             
             """)
             if action == '1':
-                sync_coder_postgres()
+                sync_postgres_postgres()
             elif action == '2':
+                sync_coder_postgres()
+            elif action == '3':
                 sync_salesforce_postgres()
             elif action == 'q':
                 break

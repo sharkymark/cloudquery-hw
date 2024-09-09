@@ -11,3 +11,5 @@ CREATE TABLE mytable (
     email VARCHAR(100),
     started_on TIMESTAMP
 );
+
+CREATE DATABASE mydestinationdatabase;
